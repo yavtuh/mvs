@@ -54,8 +54,9 @@ trait QueryTrait
 
         foreach ($fields as $key => $value) {
             $query->bindValue(":{$key}", $value);
-        }
 
+        }
+        
         $query->execute();
 
         return (int)static::connect()->lastInsertId();

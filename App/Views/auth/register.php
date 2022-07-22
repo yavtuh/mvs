@@ -16,15 +16,24 @@
                         </div>
                         <div class="mb-3">
                             <label for="surname" class="form-label">Surname</label>
-                            <input type="text" name="surname" class="form-control" id="surname" >
+                            <input type="text" name="surname" class="form-control" id="surname" value="<?= !empty($surname) ? $surname : '' ?>" >
+                            <?php if(!empty($surname_error)): ?>
+                                <div class="alert alert-danger"><?= $surname_error ?></div>
+                            <?php endif; ?>
                         </div>
                         <div class="mb-3">
                             <label for="age" class="form-label">Age</label>
-                            <input type="date" name="age" class="form-control" id="age" >
+                            <input type="date" name="age" class="form-control" id="age"  value="<?= !empty($age) ? $age : '' ?>">
+                            <?php if(!empty($age_error)): ?>
+                                <div class="alert alert-danger"><?= $age_error ?></div>
+                            <?php endif; ?>
                         </div>
                         <div class="mb-3">
                             <label for="exampleInputEmail1" class="form-label">Email address</label>
-                            <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                            <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="<?= !empty($email) ? $email : '' ?>">
+                            <?php if(!empty($email_error)): ?>
+                                <div class="alert alert-danger"><?= $email_error ?></div>
+                            <?php endif; ?>
                         </div>
                         <div class="mb-3">
                             <label for="exampleInputPassword1" class="form-label">Password</label>

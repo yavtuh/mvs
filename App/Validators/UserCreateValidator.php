@@ -5,8 +5,9 @@ namespace App\Validators;
 
 
 use App\Models\User;
+use App\Validators\Base\UserBaseValidator;
 
-class UserCreateValidator
+class UserCreateValidator extends UserBaseValidator
 {
     protected array $errors = [
         'name_error' => 'The name should contain more than 2 letters',
@@ -24,31 +25,7 @@ class UserCreateValidator
         'password' => '/[a-zA-Z0-9.!#$%&\'*+\/\?^_`{|}~-]{8,}/'
     ];
 
-    public function validate(array $fields):bool
-    {
-        foreach ($fields as $key => $field) {
-            if(preg_match($this->rules[$key], $field)){
-                unset($this->errors["{$key}_error"]);
-            }
 
-        }
-        return empty($this->errors);
-    }
-    public function checkEmailOnExists(string $email):bool
-    {
-        $result = false;
-        if(User::select()->where(['email', '=', $email]))
-        {
-            $this->errors = [
-                'email_error' => 'User with this email already exists'
-            ];
-            $result = true;
 
-        }
-        return $result;
-    }
-    public function getErrors():arrary
-    {
-        return $this->errors;
-    }
+
 }

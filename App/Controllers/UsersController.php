@@ -17,18 +17,19 @@ class UsersController extends Controller
 
 
         if($validator->validate($fields) && !$validator->checkEmailOnExists($fields['email'])){
+            $fields['password'] = password_hash($fields['password'], PASSWORD_BCRYPT);
             $userId = User::create($fields);
 
             if($userId){
-
+                redirect('login');
             }
 
-            $this->data['data'] = $fields;
-            $this->data += $validator->getErrors();
-            dd($this->data);
-            View::render('auth/register', $this->data);
-        }
 
+        }
+        $this->data['data'] = $fields;
+        $this->data += $validator->getErrors();
+
+        View::render('auth/register', $this->data);
 
     }
 }
