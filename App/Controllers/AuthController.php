@@ -29,10 +29,7 @@ class AuthController extends Controller
     }
     public function logout()
     {
-        if (!SessionHelper::isUserLoggedIn()) {
-            SessionHelper::destroy();
-        }
-
+        SessionHelper::destroy();
         redirect();
     }
     public function verify(){

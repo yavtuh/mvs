@@ -8,6 +8,7 @@ class SessionHelper
 {
     public static function isUserLoggedIn():bool
     {
+
         return !empty($_SESSION['user_data']);
     }
 
@@ -25,6 +26,8 @@ class SessionHelper
 
     public static function destroy()
     {
-        session_destroy();
+        if(session_id()) {
+            session_destroy();
+        }
     }
 }

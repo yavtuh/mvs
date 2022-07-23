@@ -19,12 +19,13 @@ trait QueryTrait
 
     public static function find(int $id)
     {
-        $query = "SELECT * FROM " . static::$tableName . " WHERE id = :id ";
-        $query = static::connect()->prepare($query);
-        $query->bindValue(':id', $id, PDO::PARAM_INT);
-        $query->execute();
+        $query = 'SELECT * FROM ' . static::$tableName . ' WHERE id = :id';
 
-        return $query->fetchObject(static::class);
+        $stmt = static::connect()->prepare($query);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchObject(static::class);
     }
     public static function findBy(string $column, $value)
     {
@@ -56,7 +57,7 @@ trait QueryTrait
             $query->bindValue(":{$key}", $value);
 
         }
-        
+
         $query->execute();
 
         return (int)static::connect()->lastInsertId();
@@ -78,25 +79,24 @@ trait QueryTrait
         return $stmt->fetchAll(PDO::FETCH_CLASS, static::class);
     }
 
-    public static function update($fields, $id)
+    public function update($fields)
     {
-        $params = [];
-        $query = "UPDATE " . static::$tableName . " SET ";
-        foreach ($fields as $key => $value){
-            $params[] = "{$value} = :{$value}";
+        if (!isset($this->id)) {
+            return $this;
         }
-        $query.= implode(',' , $params);
-        $query .= " WHERE id=:id";
+
+        $query = "UPDATE " . static::$tableName . ' SET ' . static::buildPlaceholders($fields) . " WHERE id=:id";
 
         $stmt = static::connect()->prepare($query);
+
         foreach ($fields as $key => $value) {
             $stmt->bindValue(":{$key}", $value);
         }
 
-        $stmt->bindValue('id', $id, PDO::PARAM_INT);
-
+        $stmt->bindValue('id', $this->id, PDO::PARAM_INT);
         $stmt->execute();
-        return static::find($id);
+
+        return static::find($this->id);
     }
 
     public static function delete(int $id) : bool
@@ -118,6 +118,16 @@ trait QueryTrait
             'keys' => implode(', ', $keys),
             'placeholders' =>  implode(', ', $placeholders)
         ];
+    }
+    private static function buildPlaceholders(array $data): string
+    {
+        $ps = [];
+
+        foreach ($data as $key => $value) {
+            $ps[] = " {$key}=:{$key}";
+        }
+
+        return implode(', ', $ps);
     }
 
 }
